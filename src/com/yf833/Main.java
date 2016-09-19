@@ -31,8 +31,8 @@ public class Main {
         Node root = new Node(processor_speeds);
 
         // 2. run IDFS on root node //
-
-
+        Node goal = IDFS(root);
+        System.out.println(goal.toString());
 
     }
 
@@ -68,7 +68,7 @@ public class Main {
             }
 
             // check if current node is fail state
-            if(isGoal(current)){
+            if(isFail(current)){
                 System.out.println("FAIL STATE");
                 return null;
             }

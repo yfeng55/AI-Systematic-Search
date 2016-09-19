@@ -98,8 +98,9 @@ public class Node {
     public String toString(){
         String output = "";
         for(int i=0; i<assignments.size(); i++){
-            output += ("P" + i+1 + ": ");
+            output += ("P" + (i+1) + ": ");
             output += (assignments.get(i).toString());
+            output += "\n";
         }
         return output;
     }
