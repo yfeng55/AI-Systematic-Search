@@ -40,8 +40,8 @@ public class Node {
         ArrayList<ArrayList<Integer>> newassignments = oldnode.assignments;
         newassignments.get(processor).add(tasknum);
 
-        this.processor_speeds = oldnode.processor_speeds;
-        this.assignments = newassignments;
+        this.processor_speeds = new ArrayList<>(oldnode.processor_speeds);
+        this.assignments = new ArrayList<>(newassignments);
         this.visited = false;
         this.adjacent_nodes = new ArrayList<>();
         this.depth = oldnode.depth + 1;

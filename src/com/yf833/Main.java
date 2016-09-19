@@ -42,7 +42,7 @@ public class Main {
 
         Node start = root;
 
-        for(int i=0; i<MAX_DEPTH; i++){
+        for(int i=1; i<MAX_DEPTH; i++){
             Node g = DLS(start, i);
             if(g != null){ return g; }
         }
