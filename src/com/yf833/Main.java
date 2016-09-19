@@ -15,8 +15,8 @@ public class Main {
 
     private static int num_tasks;
     private static int num_processors;
-    private static ArrayList<Number> task_lengths = new ArrayList<>();
-    private static ArrayList<Number> processor_speeds = new ArrayList<>();
+    private static ArrayList<Float> task_lengths = new ArrayList<>();
+    private static ArrayList<Float> processor_speeds = new ArrayList<>();
     private static float deadline;
     private static float target;
 
@@ -62,15 +62,21 @@ public class Main {
 
     }
 
-    private static Node nextNode()
 
-    //TODO: implement goal function
+
+    // goal function -- check if the node's value exceeds target
     private static boolean isGoal(Node n){
+        if(n.totalValue() >= target){
+            return true;
+        }
         return false;
     }
 
-    //TODO: implement fail function
+    // fail function -- check if the any of the processors exceed the deadline
     private static boolean isFail(Node n){
+        if(n.maxTimeTaken() > deadline){
+            return true;
+        }
         return false;
     }
 

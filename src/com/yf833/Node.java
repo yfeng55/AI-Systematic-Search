@@ -8,8 +8,8 @@ public class Node {
 
 
     //array of arrays -- index is the processor, inner array is the set of tasks assigned to that processor
-    public ArrayList<ArrayList<Integer>> assignments;
-    public ArrayList<Integer> processor_speeds;
+    public ArrayList<ArrayList<Float>> assignments;
+    public ArrayList<Float> processor_speeds;
 
     public boolean visited;
     public int depth;
@@ -18,13 +18,13 @@ public class Node {
 
 
     //create a root node (takes an array of processor speeds)
-    public Node(ArrayList<Integer> processor_speeds){
+    public Node(ArrayList<Float> processor_speeds){
         this.processor_speeds = processor_speeds;
 
         //create an array of tasks for each processor
-        ArrayList<ArrayList<Integer>> newassignments = new ArrayList<>();
+        ArrayList<ArrayList<Float>> newassignments = new ArrayList<>();
         for(int i=0; i<processor_speeds.size(); i++){
-            newassignments.add(new ArrayList<Integer>());
+            newassignments.add(new ArrayList<Float>());
         }
 
         this.assignments = newassignments;
@@ -35,8 +35,8 @@ public class Node {
 
 
     //create a child node
-    public Node(Node oldnode, int processor, int task){
-        ArrayList<ArrayList<Integer>> newassignments = oldnode.assignments;
+    public Node(Node oldnode, int processor, float task){
+        ArrayList<ArrayList<Float>> newassignments = oldnode.assignments;
         newassignments.get(processor).add(task);
 
         this.processor_speeds = oldnode.processor_speeds;
@@ -94,7 +94,7 @@ public class Node {
 
 
     // calculate the time it takes to complete a certain task
-    private static float calcTimeTaken(int task_length, int processor_speed){
+    private static float calcTimeTaken(float task_length, float processor_speed){
         return ((float) task_length) / processor_speed;
     }
 
