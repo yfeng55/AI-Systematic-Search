@@ -8,7 +8,7 @@ public class Node {
 
 
     //array of arrays -- index is the processor, inner array is the set of tasks assigned to that processor
-    public ArrayList<ArrayList<Float>> assignments;
+    public ArrayList<ArrayList<Integer>> assignments;
     public ArrayList<Float> processor_speeds;
 
     public boolean visited;
@@ -22,22 +22,23 @@ public class Node {
         this.processor_speeds = processor_speeds;
 
         //create an array of tasks for each processor
-        ArrayList<ArrayList<Float>> newassignments = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> newassignments = new ArrayList<>();
         for(int i=0; i<processor_speeds.size(); i++){
-            newassignments.add(new ArrayList<Float>());
+            newassignments.add(new ArrayList<Integer>());
         }
 
         this.assignments = newassignments;
         this.visited = false;
-        this.adjacent_nodes = new ArrayList<>();
         this.depth = 0;
+        this.adjacent_nodes = new ArrayList<>();
+
     }
 
 
     //create a child node
-    public Node(Node oldnode, int processor, float task){
-        ArrayList<ArrayList<Float>> newassignments = oldnode.assignments;
-        newassignments.get(processor).add(task);
+    public Node(Node oldnode, int processor, int tasknum){
+        ArrayList<ArrayList<Integer>> newassignments = oldnode.assignments;
+        newassignments.get(processor).add(tasknum);
 
         this.processor_speeds = oldnode.processor_speeds;
         this.assignments = newassignments;
@@ -80,6 +81,17 @@ public class Node {
 
 
         return maxtimetaken;
+    }
+
+
+    //return true if the node has been assigned this task
+    public boolean hasTask(int tasknum){
+        for(ArrayList<Integer> assignment : assignments){
+            for(int task : assignment){
+                if(tasknum == task){ return true; }
+            }
+        }
+        return false;
     }
 
 

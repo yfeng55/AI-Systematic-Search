@@ -2,10 +2,8 @@ package com.yf833;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.AbstractQueue;
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Scanner;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class Main {
 
@@ -15,6 +13,9 @@ public class Main {
 
     private static int num_tasks;
     private static int num_processors;
+
+    private static HashSet<Integer> tasks = new HashSet<>();
+
     private static ArrayList<Float> task_lengths = new ArrayList<>();
     private static ArrayList<Float> processor_speeds = new ArrayList<>();
     private static float deadline;
@@ -53,16 +54,63 @@ public class Main {
     // depth limited search function //
     private static Node DLS(Node start, int depthlimit){
 
-        //base case: node is goal
-        if(isGoal(start)){ return start; }
+        Stack<Node> stack = new Stack<>();
+        stack.push(start);
 
-        //mark node as visited
-        start.visited = true;
+        while(!stack.isEmpty()){
 
+            Node current = stack.pop();
 
+            // check if current node is goal state
+            if(isGoal(current)){
+                System.out.println("FOUND GOAL");
+                return current;
+            }
+
+            // check if current node is fail state
+            if(isGoal(current)){
+                System.out.println("FAIL STATE");
+                return null;
+            }
+
+            // check if max depth is reached
+            if(current.depth >= depthlimit){
+                continue;
+            }
+
+            for(Node n : getAdjacentNodes(current)){
+                stack.push(n);
+            }
+
+        }
+
+        return null;
     }
 
 
+    // return an array list of adjacent nodes
+    private static ArrayList<Node> getAdjacentNodes(Node n){
+
+        ArrayList<Node> adjacentnodes = new ArrayList<>();
+
+        // get the set of unassigned tasks
+        HashSet<Integer> unassigned_tasks = new HashSet<>();
+        for(int task : tasks){
+            if(!n.hasTask(task)){
+                unassigned_tasks.add(task);
+            }
+        }
+
+        // create a node for each possible processor-task assignment and add to the adjacent nodes array
+        for(int task : tasks){
+            for(int p=0; p<processor_speeds.size(); p++) {
+                adjacentnodes.add(new Node(n, p, task));
+            }
+        }
+
+
+        return adjacentnodes;
+    }
 
     // goal function -- check if the node's value exceeds target
     private static boolean isGoal(Node n){
@@ -87,8 +135,12 @@ public class Main {
         Scanner s = new Scanner(f);
 
         String[] firstline = s.nextLine().split(" +");
+        int tasknum = 1;
         for(String c : firstline){
             task_lengths.add(Float.parseFloat(c));
+
+            tasks.add(tasknum);
+            tasknum++;
         }
 
         String[] secondline = s.nextLine().split(" +");
