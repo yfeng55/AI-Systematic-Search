@@ -8,21 +8,23 @@ public class Node {
 
 
     //array of arrays -- index is the processor, inner array is the set of tasks assigned to that processor
-    public ArrayList<ArrayList<Number>> assignments;
-    public ArrayList<Number> processor_speeds;
+    public ArrayList<ArrayList<Integer>> assignments;
+    public ArrayList<Integer> processor_speeds;
 
     public boolean visited;
     public int depth;
     public ArrayList<Node> adjacent_nodes;
 
+
+
     //create a root node (takes an array of processor speeds)
-    public Node(ArrayList<Number> processor_speeds){
+    public Node(ArrayList<Integer> processor_speeds){
         this.processor_speeds = processor_speeds;
 
         //create an array of tasks for each processor
-        ArrayList<ArrayList<Number>> newassignments = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> newassignments = new ArrayList<>();
         for(int i=0; i<processor_speeds.size(); i++){
-            newassignments.add(new ArrayList<Number>());
+            newassignments.add(new ArrayList<Integer>());
         }
 
         this.assignments = newassignments;
@@ -31,9 +33,10 @@ public class Node {
         this.depth = 0;
     }
 
+
     //create a child node
     public Node(Node oldnode, int processor, int task){
-        ArrayList<ArrayList<Number>> newassignments = oldnode.assignments;
+        ArrayList<ArrayList<Integer>> newassignments = oldnode.assignments;
         newassignments.get(processor).add(task);
 
         this.processor_speeds = oldnode.processor_speeds;
@@ -45,14 +48,38 @@ public class Node {
 
 
 
-    //TODO: implement totalTimeTaken()
-    public int totalTimeTaken(){
-        return 0;
+    // return the total value of the assigned tasks in this node //
+    public int totalValue(){
+
+        int totalvalue = 0;
+
+        for(int i=0; i<this.assignments.size(); i++){
+            for(int j=0; j<this.assignments.get(i).size(); j++){
+                totalvalue += this.assignments.get(i).get(j);
+            }
+        }
+
+        return totalvalue;
     }
 
-    //TODO: implement totalValue()
-    public int totalValue(){
-        return 0;
+    // return the maximum amount of time taken by a processor in this node //
+    public float maxTimeTaken(){
+        
+        float maxtimetaken = 0;
+
+        for(int i=0; i<this.assignments.size(); i++){
+            float processortime = 0;
+            for(int j=0; j<this.assignments.get(i).size(); j++){
+                processortime += calcTimeTaken(this.assignments.get(i).get(j), this.processor_speeds.get(i));
+            }
+
+            if(processortime > maxtimetaken){
+                maxtimetaken = processortime;
+            }
+        }
+
+
+        return maxtimetaken;
     }
 
 
