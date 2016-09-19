@@ -28,7 +28,7 @@ public class Main {
         readInputFile(file);
 
         // 1. create a root node //
-        Node root = new Node(processor_speeds);
+        Node root = new Node(processor_speeds, task_lengths);
 
         // 2. run IDFS on root node //
         Node goal = IDFS(root);
@@ -60,6 +60,7 @@ public class Main {
         while(!stack.isEmpty()){
 
             Node current = stack.pop();
+            System.out.println(current.toString());
 
             // check if current node is goal state
             if(isGoal(current)){
@@ -70,12 +71,11 @@ public class Main {
             // check if current node is fail state
             if(isFail(current)){
                 System.out.println("FAIL STATE");
-                return null;
             }
 
             // check if max depth is reached
             if(current.depth >= depthlimit){
-                continue;
+                break;
             }
 
             for(Node n : getAdjacentNodes(current)){
@@ -102,7 +102,7 @@ public class Main {
         }
 
         // create a node for each possible processor-task assignment and add to the adjacent nodes array
-        for(int task : tasks){
+        for(int task : unassigned_tasks){
             for(int p=0; p<processor_speeds.size(); p++) {
                 adjacentnodes.add(new Node(n, p, task));
             }

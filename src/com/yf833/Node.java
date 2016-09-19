@@ -9,7 +9,9 @@ public class Node {
 
     //array of arrays -- index is the processor, inner array is the set of tasks assigned to that processor
     public ArrayList<ArrayList<Integer>> assignments;
+
     public ArrayList<Float> processor_speeds;
+    public ArrayList<Float> task_lengths;
 
     public boolean visited;
     public int depth;
@@ -18,8 +20,9 @@ public class Node {
 
 
     //create a root node (takes an array of processor speeds)
-    public Node(ArrayList<Float> processor_speeds){
+    public Node(ArrayList<Float> processor_speeds, ArrayList<Float> task_lengths){
         this.processor_speeds = processor_speeds;
+        this.task_lengths = task_lengths;
 
         //create an array of tasks for each processor
         ArrayList<ArrayList<Integer>> newassignments = new ArrayList<>();
@@ -37,10 +40,12 @@ public class Node {
 
     //create a child node
     public Node(Node oldnode, int processor, int tasknum){
-        ArrayList<ArrayList<Integer>> newassignments = oldnode.assignments;
+        ArrayList<ArrayList<Integer>> newassignments = copyAssignments(oldnode.assignments);
         newassignments.get(processor).add(tasknum);
 
         this.processor_speeds = new ArrayList<>(oldnode.processor_speeds);
+        this.task_lengths = new ArrayList<>(oldnode.task_lengths);
+
         this.assignments = new ArrayList<>(newassignments);
         this.visited = false;
         this.adjacent_nodes = new ArrayList<>();
@@ -56,7 +61,7 @@ public class Node {
 
         for(int i=0; i<this.assignments.size(); i++){
             for(int j=0; j<this.assignments.get(i).size(); j++){
-                totalvalue += this.assignments.get(i).get(j);
+                totalvalue += this.task_lengths.get(this.assignments.get(i).get(j)-1);
             }
         }
 
@@ -71,7 +76,7 @@ public class Node {
         for(int i=0; i<this.assignments.size(); i++){
             float processortime = 0;
             for(int j=0; j<this.assignments.get(i).size(); j++){
-                processortime += calcTimeTaken(this.assignments.get(i).get(j), this.processor_speeds.get(i));
+                processortime += calcTimeTaken(task_lengths.get(this.assignments.get(i).get(j)-1), this.processor_speeds.get(i));
             }
 
             if(processortime > maxtimetaken){
@@ -106,11 +111,21 @@ public class Node {
     }
 
 
+    ///// STATIC HELPER METHODS /////
+
     // calculate the time it takes to complete a certain task
     private static float calcTimeTaken(float task_length, float processor_speed){
         return ((float) task_length) / processor_speed;
     }
 
+    // create a copy of the assignments arraylist
+    private static ArrayList<ArrayList<Integer>> copyAssignments(ArrayList<ArrayList<Integer>> oldassignments){
+        ArrayList<ArrayList<Integer>> newassignments = new ArrayList<>();
+        for(ArrayList<Integer> assignment : oldassignments){
+            newassignments.add(new ArrayList<Integer>(assignment));
+        }
+        return newassignments;
+    }
 
 
 
