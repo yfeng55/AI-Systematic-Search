@@ -63,16 +63,13 @@ public class Main {
             System.out.println(current.toString());
 
             // check if current node is goal state
-            if(isGoal(current)){
+            if(isGoal(current) && !isFail(current)){
                 System.out.println("FOUND GOAL");
                 return current;
             }
-
             // check if current node is fail state
-            if(isFail(current)){
-                System.out.println("FAIL STATE");
-            }
-
+            if(isFail(current)){ System.out.println("FAIL STATE"); }
+            
             // check if max depth is reached
             if(current.depth >= depthlimit){
                 break;
