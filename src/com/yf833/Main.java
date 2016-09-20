@@ -2,14 +2,13 @@ package com.yf833;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
 
 
     private static final String INPUT_FILE = "input.txt";
-    private static final int MAX_DEPTH = 1000000;
+    private static final int MAX_DEPTH = 10;
 
     private static int num_tasks;
     private static int num_processors;
@@ -30,19 +29,29 @@ public class Main {
         // 1. create a root node //
         Node root = new Node(processor_speeds, task_lengths);
 
-        // 2. run IDFS on root node //
-        Node goal = IDFS(root);
-        System.out.println(goal.toString());
+        // 2. compute starting point q;
+        int q = computeQ(task_lengths, target);
+        System.out.println("Q: " + q);
+
+        // 3. run IDFS on root node //
+        Node goal = IDFS(root, q);
+
+        if(goal != null){
+            System.out.println(goal.toString());
+        }else{
+            System.out.println("No Solution");
+        }
+
 
     }
 
 
     // iterative deepening DFS //
-    private static Node IDFS(Node root){
+    private static Node IDFS(Node root, int q){
 
         Node start = root;
 
-        for(int i=1; i<MAX_DEPTH; i++){
+        for(int i=q; i<MAX_DEPTH; i++){
             Node g = DLS(start, i);
             if(g != null){ return g; }
         }
@@ -60,6 +69,7 @@ public class Main {
         while(!stack.isEmpty()){
 
             Node current = stack.pop();
+
             System.out.println(current.toString());
 
             // check if current node is goal state
@@ -68,16 +78,26 @@ public class Main {
                 return current;
             }
             // check if current node is fail state
-            if(isFail(current)){ System.out.println("FAIL STATE"); }
-            
-            // check if max depth is reached
-            if(current.depth >= depthlimit){
-                break;
+            if(isFail(current)){
+                System.out.println("FAIL STATE");
+                continue;
             }
 
-            for(Node n : getAdjacentNodes(current)){
+            // check if max depth is reached
+            if(current.depth >= depthlimit){
+                return null;
+            }
+
+            // add adjacent nodes to stack
+            if(!current.visited){
+                current.adjacent_nodes = getAdjacentNodes(current);
+            }
+
+            for(Node n : current.adjacent_nodes){
                 stack.push(n);
             }
+
+            current.visited = true;
 
         }
 
@@ -124,6 +144,30 @@ public class Main {
         }
         return false;
     }
+
+    // compute starting point Q
+    private static int computeQ(ArrayList<Float> task_lengths, float target){
+
+        int q = 0;
+
+        //sort task_lengths from highest to lowest
+        ArrayList<Float> sorted_lengths = new ArrayList<>(task_lengths);
+        Collections.sort(sorted_lengths);
+
+        float total = 0;
+        for(int i=sorted_lengths.size()-1; i>=0; i--){
+            total += sorted_lengths.get(i);
+            if(total < target){
+                q++;
+            }else{
+                q++;
+                break;
+            }
+        }
+
+        return q;
+    }
+
 
 
     // initialize values from input txt file //

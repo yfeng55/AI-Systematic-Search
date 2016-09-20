@@ -52,6 +52,19 @@ public class Node {
         this.depth = oldnode.depth + 1;
     }
 
+    //copy constructor
+    public Node(Node oldnode){
+        ArrayList<ArrayList<Integer>> newassignments = copyAssignments(oldnode.assignments);
+
+        this.processor_speeds = new ArrayList<>(oldnode.processor_speeds);
+        this.task_lengths = new ArrayList<>(oldnode.task_lengths);
+
+        this.assignments = new ArrayList<>(newassignments);
+        this.visited = false;
+        this.adjacent_nodes = new ArrayList<>();
+        this.depth = oldnode.depth;
+    }
+
 
 
     // return the total value of the assigned tasks in this node //
