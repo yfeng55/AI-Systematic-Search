@@ -44,38 +44,73 @@ public class Main {
 
 
         // 4. run hill-climbing
-        Node goal = hillClimbingRandomRestart();
+//        System.out.println(getRandomStartState().toString());
+//        Node goal = hillClimbingRandomRestart();
 
 
     }
 
 
+//    // TODO: hill-climbing with random restart //
+//    private static Node hillClimbingRandomRestart(){
+//        // fetch a random starting point
+//
+//
+//    }
+//
+//    // TODO: hillClimb() - examines all neighbors
+//    private static Node hillClimb(Node s){
+//
+//    }
+//
+//
+//    // TODO: generateNeighbors - get states that add a task or swap two tasks
+//    private static ArrayList<Node> getHillNeighbors(){
+//        ArrayList<Node> neighbors = new ArrayList<>();
+//
+//        return neighbors;
+//    }
 
-    // TODO: hill-climbing with random restart //
-    private static Node hillClimbingRandomRestart(){
-        // fetch a random starting point
 
-
-    }
-
-    // TODO: hillClimb() - examines all neighbors
-    private static Node hillClimb(Node s){
-
-    }
-
-
-    // TODO: generateNeighbors - get states that add a task or swap two tasks
-    private static ArrayList<Node> getHillNeighbors(){
-        ArrayList<Node> neighbors = new ArrayList<>();
-
-        return neighbors;
-    }
-
-    // TODO: getRandomStartState - get a randome starting node from the search-space
+    // getRandomStartState - get a random starting node from the search-space
     private static Node getRandomStartState(){
 
-    }
+        // return a random combination of processor-task assignments
+        ArrayList<Node> combinations = new ArrayList<>();
 
+        Node root = new Node(processor_speeds, task_lengths);
+        Stack<Node> s = new Stack<Node>();
+        s.add(root);
+
+        //while stack is not empty, keep popping from stack and generating adjacent nodes from the popped node
+        while(!s.isEmpty()){
+
+            Node current = s.pop();
+            combinations.add(current);
+
+            // get the set of unassigned tasks
+            HashSet<Integer> unassigned_tasks = new HashSet<>();
+            for(int task : tasks){
+                if(!current.hasTask(task)){
+                    unassigned_tasks.add(task);
+                }
+            }
+
+            // create a node for each possible processor-task assignment and add to the stack
+            for(int task : unassigned_tasks){
+                for(int p=0; p<processor_speeds.size(); p++) {
+                    s.add(new Node(current, p, task));
+                }
+            }
+        }
+
+        // get a random number from 0 - (# of combinations)
+        Random r = new Random();
+        int randindex = r.nextInt(combinations.size() - 0 + 1) + 0;
+
+        return combinations.get(randindex);
+
+    }
 
     // cost function - a function of a node's value deficit and time overflow
     private static float costFn(Node n){
@@ -83,9 +118,6 @@ public class Main {
         float time_overflow = n.maxTimeTaken() - deadline;
         return value_deficit + time_overflow;
     }
-
-
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +135,6 @@ public class Main {
 
         return null;
     }
-
 
     // depth limited search function //
     private static Node DLS(Node start, int depthlimit){
@@ -149,9 +180,6 @@ public class Main {
         return null;
     }
 
-
-
-
     // return an array list of adjacent nodes
     private static ArrayList<Node> getAdjacentNodes(Node n){
 
@@ -160,9 +188,7 @@ public class Main {
         // get the set of unassigned tasks
         HashSet<Integer> unassigned_tasks = new HashSet<>();
         for(int task : tasks){
-            if(!n.hasTask(task)){
-                unassigned_tasks.add(task);
-            }
+            if(!n.hasTask(task)){ unassigned_tasks.add(task); }
         }
 
         // create a node for each possible processor-task assignment and add to the adjacent nodes array
@@ -171,7 +197,6 @@ public class Main {
                 adjacentnodes.add(new Node(n, p, task));
             }
         }
-
 
         return adjacentnodes;
     }
@@ -194,9 +219,7 @@ public class Main {
 
     // compute starting point Q
     private static int computeQ(ArrayList<Float> task_lengths, float target){
-
         int q = 0;
-
         //sort task_lengths from highest to lowest
         ArrayList<Float> sorted_lengths = new ArrayList<>(task_lengths);
         Collections.sort(sorted_lengths);
@@ -211,10 +234,11 @@ public class Main {
                 break;
             }
         }
-
         return q;
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     // initialize values from input txt file //
@@ -226,7 +250,6 @@ public class Main {
         int tasknum = 1;
         for(String c : firstline){
             task_lengths.add(Float.parseFloat(c));
-
             tasks.add(tasknum);
             tasknum++;
         }
@@ -238,11 +261,9 @@ public class Main {
 
         deadline = Float.parseFloat(s.next());
         target = Float.parseFloat(s.next());
-
         num_tasks = task_lengths.size();
         num_processors = processor_speeds.size();
     }
-
 
     //check that input was read in correctly
     private static void printInputValues(){
