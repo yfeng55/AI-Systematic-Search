@@ -34,16 +34,61 @@ public class Main {
         System.out.println("Q: " + q);
 
         // 3. run IDFS on root node //
-        Node goal = IDFS(root, q);
+//        Node goal = IDFS(root, q);
+//
+//        if(goal != null){
+//            System.out.println(goal.toString());
+//        }else{
+//            System.out.println("No Solution");
+//        }
 
-        if(goal != null){
-            System.out.println(goal.toString());
-        }else{
-            System.out.println("No Solution");
-        }
+
+        // 4. run hill-climbing
+        Node goal = hillClimbingRandomRestart();
 
 
     }
+
+
+
+    // TODO: hill-climbing with random restart //
+    private static Node hillClimbingRandomRestart(){
+        // fetch a random starting point
+
+
+    }
+
+    // TODO: hillClimb() - examines all neighbors
+    private static Node hillClimb(Node s){
+
+    }
+
+
+    // TODO: generateNeighbors - get states that add a task or swap two tasks
+    private static ArrayList<Node> getHillNeighbors(){
+        ArrayList<Node> neighbors = new ArrayList<>();
+
+        return neighbors;
+    }
+
+    // TODO: getRandomStartState - get a randome starting node from the search-space
+    private static Node getRandomStartState(){
+
+    }
+
+
+    // cost function - a function of a node's value deficit and time overflow
+    private static float costFn(Node n){
+        float value_deficit = target - n.totalValue();
+        float time_overflow = n.maxTimeTaken() - deadline;
+        return value_deficit + time_overflow;
+    }
+
+
+
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     // iterative deepening DFS //
@@ -103,6 +148,8 @@ public class Main {
 
         return null;
     }
+
+
 
 
     // return an array list of adjacent nodes
