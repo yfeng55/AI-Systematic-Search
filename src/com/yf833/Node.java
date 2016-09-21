@@ -132,7 +132,7 @@ public class Node {
     }
 
     // create a copy of the assignments arraylist
-    private static ArrayList<ArrayList<Integer>> copyAssignments(ArrayList<ArrayList<Integer>> oldassignments){
+    public static ArrayList<ArrayList<Integer>> copyAssignments(ArrayList<ArrayList<Integer>> oldassignments){
         ArrayList<ArrayList<Integer>> newassignments = new ArrayList<>();
         for(ArrayList<Integer> assignment : oldassignments){
             newassignments.add(new ArrayList<Integer>(assignment));

@@ -46,7 +46,7 @@ public class Main {
         // 4. run hill-climbing
 //        System.out.println(getRandomStartState().toString());
 //        Node goal = hillClimbingRandomRestart();
-
+        getHillNeighbors(getRandomStartState());
 
     }
 
@@ -65,11 +65,40 @@ public class Main {
 //
 //
 //    // TODO: generateNeighbors - get states that add a task or swap two tasks
-//    private static ArrayList<Node> getHillNeighbors(){
-//        ArrayList<Node> neighbors = new ArrayList<>();
-//
-//        return neighbors;
-//    }
+    private static ArrayList<Node> getHillNeighbors(Node n){
+
+        // get neighbors from adding a task
+        ArrayList<Node> neighbors = getAdjacentNodes(n);
+
+        // add neighbors from swapping tasks
+        for(int i=0; i<n.assignments.size(); i++){
+            for(int j=0; j<n.assignments.get(i).size(); j++){
+
+                for(int k=i+1; k<n.assignments.size(); k++){
+                    for(int l=0; l<n.assignments.get(k).size(); l++){
+
+                        ArrayList<ArrayList<Integer>> newassignments = Node.copyAssignments(n.assignments);
+
+                        //swap i and k
+                        int task1 = newassignments.get(i).get(j);
+                        int task2 = newassignments.get(k).get(l);
+
+                        newassignments.get(i).set(j, task2);
+                        newassignments.get(k).set(l, task1);
+
+                        //add to neighbors
+                        Node newnode = new Node(n);
+                        newnode.assignments = newassignments;
+                        neighbors.add(newnode);
+
+                    }
+                }
+
+            }
+        }
+
+        return neighbors;
+    }
 
 
     // getRandomStartState - get a random starting node from the search-space
