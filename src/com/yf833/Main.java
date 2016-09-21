@@ -51,20 +51,50 @@ public class Main {
     }
 
 
-//    // TODO: hill-climbing with random restart //
-//    private static Node hillClimbingRandomRestart(){
-//        // fetch a random starting point
-//
-//
-//    }
-//
-//    // TODO: hillClimb() - examines all neighbors
-//    private static Node hillClimb(Node s){
-//
-//    }
-//
-//
-//    // TODO: generateNeighbors - get states that add a task or swap two tasks
+    // TODO: hill-climbing with random restart //
+    private static Node hillClimbingRandomRestart(Node root){
+
+        Node bestsolution = root;
+
+        for(int i=0; i<10; i++){
+
+            // fetch a random starting point
+            Node s = getRandomStartState();
+
+            // hill climb from the starting point
+            Node localsolution = hillClimb(s);
+
+            // return best solution
+            if(costFn(s) < costFn(bestsolution)){
+                bestsolution = s;
+            }
+
+        }
+
+        return bestsolution;
+    }
+
+
+    // TODO: hillClimb() - examines all neighbors
+    private static Node hillClimb(Node s){
+
+        ArrayList<Node> neighbors = getHillNeighbors(s);
+
+        //compute costFn() for each neighbor N of S and return the best neighbor
+        Node bestneighbor = neighbors.get(0);
+        float lowestcost = costFn(neighbors.get(0));
+
+        for(Node neighbor : neighbors){
+            if(costFn(neighbor) < lowestcost){
+                bestneighbor = neighbor;
+            }
+        }
+
+        return bestneighbor;
+    }
+
+
+//    // generateNeighbors - get states that add a task or swap two tasks
     private static ArrayList<Node> getHillNeighbors(Node n){
 
         // get neighbors from adding a task
@@ -225,9 +255,7 @@ public class Main {
             for(Node n : current.adjacent_nodes){
                 stack.push(n);
             }
-
             current.visited = true;
-
         }
 
         return null;
