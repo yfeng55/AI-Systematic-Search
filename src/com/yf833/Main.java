@@ -97,6 +97,30 @@ public class Main {
             }
         }
 
+        // add neighbors from moving tasks
+        for(int i=0; i<n.assignments.size(); i++){
+            for(int j=0; j<n.assignments.get(i).size(); j++){
+
+                for(int k=0; k<n.assignments.size(); k++){
+                    if(i != k){
+                        ArrayList<ArrayList<Integer>> newassignments = Node.copyAssignments(n.assignments);
+
+                        //swap i and k
+                        int movetask = newassignments.get(i).get(j);
+
+                        newassignments.get(i).remove(j);
+                        newassignments.get(k).add(movetask);
+
+                        //add to neighbors
+                        Node newnode = new Node(n);
+                        newnode.assignments = newassignments;
+                        neighbors.add(newnode);
+                    }
+                }
+
+            }
+        }
+
         return neighbors;
     }
 
