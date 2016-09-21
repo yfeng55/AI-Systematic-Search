@@ -44,9 +44,8 @@ public class Main {
 
 
         // 4. run hill-climbing
-//        System.out.println(getRandomStartState().toString());
-//        Node goal = hillClimbingRandomRestart();
-        getHillNeighbors(getRandomStartState());
+        Node goal = hillClimbingRandomRestart(root);
+        System.out.println(goal.toString());
 
     }
 
@@ -58,6 +57,8 @@ public class Main {
 
         for(int i=0; i<10; i++){
 
+            System.out.println("hill-climb round " + (i+1));
+
             // fetch a random starting point
             Node s = getRandomStartState();
 
@@ -65,8 +66,8 @@ public class Main {
             Node localsolution = hillClimb(s);
 
             // return best solution
-            if(costFn(s) < costFn(bestsolution)){
-                bestsolution = s;
+            if(costFn(localsolution) < costFn(bestsolution)){
+                bestsolution = localsolution;
             }
 
         }
