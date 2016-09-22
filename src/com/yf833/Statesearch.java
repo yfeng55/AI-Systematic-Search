@@ -4,10 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class Main {
+public class Statesearch {
 
 
-    private static final String INPUT_FILE = "input.txt";
     private static final int MAX_DEPTH = 10;
 
     private static int num_tasks;
@@ -23,7 +22,7 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        File file = new File(INPUT_FILE);
+        File file = new File(args[0]);
         readInputFile(file);
 
         // 1. create a root node //
@@ -76,18 +75,33 @@ public class Main {
     // hillClimb() - examines all neighbors
     private static Node hillClimb(Node s){
 
-        ArrayList<Node> neighbors = getHillNeighbors(s);
+        float bestCostSoFar = costFn(s);
+        Node bestneighbor = s;
 
-        //compute costFn() for each neighbor N of S and return the best neighbor
-        Node bestneighbor = neighbors.get(0);
-        float lowestcost = costFn(neighbors.get(0));
+        //find the best neighbor of current
+        do{
 
-        for(Node neighbor : neighbors){
-            if(costFn(neighbor) < lowestcost){
-                bestneighbor = neighbor;
+            if(costFn(bestneighbor) < bestCostSoFar){
+                bestCostSoFar = costFn(bestneighbor);
             }
-        }
 
+            ArrayList<Node> neighbors = getHillNeighbors(bestneighbor);
+
+            //compute costFn() for each neighbor N of S and return the best neighbor
+            bestneighbor = neighbors.get(0);
+            float lowestcost = costFn(neighbors.get(0));
+
+            for(Node neighbor : neighbors){
+                if(costFn(neighbor) < lowestcost){
+                    bestneighbor = neighbor;
+                }
+            }
+
+//            System.out.print("climb -->");
+
+        }while(costFn(bestneighbor) < bestCostSoFar);
+
+//        System.out.println("\n");
         return bestneighbor;
     }
 
@@ -97,6 +111,23 @@ public class Main {
 
         // get neighbors from adding a task
         ArrayList<Node> neighbors = getAdjacentNodes(n);
+
+        // add neighbors from removing tasks
+        for(int i=0; i<n.assignments.size(); i++){
+            for(int j=0; j<n.assignments.get(i).size(); j++){
+
+                ArrayList<ArrayList<Integer>> newassignments = Node.copyAssignments(n.assignments);
+
+                //remove task j
+                newassignments.get(i).remove(j);
+
+                //add to neighbors
+                Node newnode = new Node(n);
+                newnode.assignments = newassignments;
+                neighbors.add(newnode);
+
+            }
+        }
 
         // add neighbors from swapping tasks
         for(int i=0; i<n.assignments.size(); i++){
@@ -190,8 +221,8 @@ public class Main {
 
     // cost function - a function of a node's value deficit and time overflow
     private static float costFn(Node n){
-        float value_deficit = target - n.totalValue();
-        float time_overflow = n.maxTimeTaken() - deadline;
+        float value_deficit = Math.max(0, target - n.totalValue());
+        float time_overflow = Math.max(0, n.maxTimeTaken() - deadline);
         return value_deficit + time_overflow;
     }
 
