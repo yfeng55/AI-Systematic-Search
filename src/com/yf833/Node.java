@@ -68,9 +68,9 @@ public class Node {
 
 
     // return the total value of the assigned tasks in this node //
-    public int totalValue(){
+    public float totalValue(){
 
-        int totalvalue = 0;
+        float totalvalue = 0;
 
         for(int i=0; i<this.assignments.size(); i++){
             for(int j=0; j<this.assignments.get(i).size(); j++){
@@ -128,7 +128,7 @@ public class Node {
 
     // calculate the time it takes to complete a certain task
     private static float calcTimeTaken(float task_length, float processor_speed){
-        return ((float) task_length) / processor_speed;
+        return ((float) task_length) / (float) processor_speed;
     }
 
     // create a copy of the assignments arraylist
