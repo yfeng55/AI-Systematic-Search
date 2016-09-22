@@ -31,33 +31,32 @@ public class Main {
 
         // 2. compute starting point q;
         int q = computeQ(task_lengths, target);
-        System.out.println("Q: " + q);
+        //System.out.println("Q: " + q);
 
         // 3. run IDFS on root node //
-//        Node goal = IDFS(root, q);
-//
-//        if(goal != null){
-//            System.out.println(goal.toString());
-//        }else{
-//            System.out.println("No Solution");
-//        }
+        Node goal = IDFS(root, q);
+        System.out.println("----- IDFS Solution -----");
+        if(goal != null){
+            System.out.println(goal.toString());
+        }else{
+            System.out.println("No Solution");
+        }
 
-
-        // 4. run hill-climbing
-        Node goal = hillClimbingRandomRestart(root);
-        System.out.println(goal.toString());
+        // 4. run hill-climbing //
+        System.out.println("----- Hill-Climbing Solution -----");
+        Node hillgoal = hillClimbingRandomRestart(root);
+        System.out.println(hillgoal.toString());
 
     }
 
 
-    // TODO: hill-climbing with random restart //
+    // hill-climbing with random restart //
     private static Node hillClimbingRandomRestart(Node root){
 
         Node bestsolution = root;
 
         for(int i=0; i<10; i++){
-
-            System.out.println("hill-climb round " + (i+1));
+            //System.out.println("hill-climb round " + (i+1));
 
             // fetch a random starting point
             Node s = getRandomStartState();
@@ -69,14 +68,12 @@ public class Main {
             if(costFn(localsolution) < costFn(bestsolution)){
                 bestsolution = localsolution;
             }
-
         }
-
         return bestsolution;
     }
 
 
-    // TODO: hillClimb() - examines all neighbors
+    // hillClimb() - examines all neighbors
     private static Node hillClimb(Node s){
 
         ArrayList<Node> neighbors = getHillNeighbors(s);
@@ -95,7 +92,7 @@ public class Main {
     }
 
 
-//    // generateNeighbors - get states that add a task or swap two tasks
+    // generateNeighbors - get states that add a task or swap two tasks
     private static ArrayList<Node> getHillNeighbors(Node n){
 
         // get neighbors from adding a task
@@ -225,16 +222,16 @@ public class Main {
 
             Node current = stack.pop();
 
-            System.out.println(current.toString());
+            //System.out.println(current.toString());
 
             // check if current node is goal state
             if(isGoal(current) && !isFail(current)){
-                System.out.println("FOUND GOAL");
+                //System.out.println("FOUND GOAL");
                 return current;
             }
             // check if current node is fail state
             if(isFail(current)){
-                System.out.println("FAIL STATE");
+                //System.out.println("FAIL STATE");
                 continue;
             }
 
