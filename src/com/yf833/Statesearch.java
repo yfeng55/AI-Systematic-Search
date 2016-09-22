@@ -36,15 +36,15 @@ public class Statesearch {
         Node goal = IDFS(root, q);
         System.out.println("----- IDFS Solution -----");
         if(goal != null){
-            System.out.println(goal.toString());
+            System.out.println(goal.toAnswer());
         }else{
             System.out.println("No Solution");
         }
 
         // 4. run hill-climbing //
-        System.out.println("----- Hill-Climbing Solution -----");
+        System.out.println("\n----- Hill-Climbing Solution -----");
         Node hillgoal = hillClimbingRandomRestart(root);
-        System.out.println(hillgoal.toString());
+        System.out.println(hillgoal.toAnswer());
 
     }
 

@@ -89,7 +89,7 @@ public class Node {
         for(int i=0; i<this.assignments.size(); i++){
             float processortime = 0;
             for(int j=0; j<this.assignments.get(i).size(); j++){
-                processortime += calcTimeTaken(task_lengths.get(this.assignments.get(i).get(j)-1), this.processor_speeds.get(i));
+                processortime += calcTimeTaken(task_lengths.get(this.assignments.get(i).get(j) - 1), this.processor_speeds.get(i));
             }
 
             if(processortime > maxtimetaken){
@@ -120,6 +120,32 @@ public class Node {
             output += (assignments.get(i).toString());
             output += "\n";
         }
+        return output;
+    }
+
+
+    public String toAnswer(){
+        String output = "";
+
+        int numtasks = this.task_lengths.size();
+
+        for(int i=1; i<numtasks+1; i++){
+
+            String taskassignment = "";
+
+            //loop through processors
+            for(int j=0; j<this.assignments.size(); j++){
+                if(this.assignments.get(j).contains(i)){
+                    taskassignment = Integer.toString(j+1);
+                }
+            }
+            if(taskassignment.equals("")){
+                taskassignment = "0";
+            }
+            output += taskassignment + " ";
+
+        }
+
         return output;
     }
 
