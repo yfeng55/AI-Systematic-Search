@@ -159,41 +159,36 @@ public class Main {
     // getRandomStartState - get a random starting node from the search-space
     private static Node getRandomStartState(){
 
-        // return a random combination of processor-task assignments
-        ArrayList<Node> combinations = new ArrayList<>();
+        Random rn = new Random();
+        int remaining_tasks = num_tasks;
+        int[] tasks_per_processor = new int[num_processors];
 
-        Node root = new Node(processor_speeds, task_lengths);
-        Stack<Node> s = new Stack<Node>();
-        s.add(root);
+        // generate K numbers between 0..remaining_tasks
+        for(int i=0; i<tasks_per_processor.length; i++){
+            int taskcount = rn.nextInt(remaining_tasks - 0 + 1) + 0;
+            tasks_per_processor[i] = taskcount;
+            remaining_tasks -= taskcount;
+        }
 
-        //while stack is not empty, keep popping from stack and generating adjacent nodes from the popped node
-        while(!s.isEmpty()){
+        //get a set of unassignedtasks
+        ArrayList<Integer> unassigned_tasks = new ArrayList<>(tasks);
 
-            Node current = s.pop();
-            combinations.add(current);
+        Node newnode = new Node(processor_speeds, task_lengths);
+        ArrayList<ArrayList<Integer>> newassignments = Node.copyAssignments(newnode.assignments);
 
-            // get the set of unassigned tasks
-            HashSet<Integer> unassigned_tasks = new HashSet<>();
-            for(int task : tasks){
-                if(!current.hasTask(task)){
-                    unassigned_tasks.add(task);
-                }
-            }
+        //for each processor, randomly select tasks_per_processor[i] number of tasks
+        for(int i=0; i<num_processors; i++){
+            for(int j=0; j<tasks_per_processor[i]; j++){
 
-            // create a node for each possible processor-task assignment and add to the stack
-            for(int task : unassigned_tasks){
-                for(int p=0; p<processor_speeds.size(); p++) {
-                    s.add(new Node(current, p, task));
-                }
+                //generate a rand number between 0..unassigned_tasks.size-1
+                int randtask = rn.nextInt((unassigned_tasks.size()-1) - 0 + 1) + 0;
+                newassignments.get(i).add(unassigned_tasks.get(randtask));
+                unassigned_tasks.remove(randtask);
             }
         }
 
-        // get a random number from 0 - (# of combinations)
-        Random r = new Random();
-        int randindex = r.nextInt(combinations.size() - 0 + 1) + 0;
-
-        return combinations.get(randindex);
-
+        newnode.assignments = newassignments;
+        return newnode;
     }
 
     // cost function - a function of a node's value deficit and time overflow
